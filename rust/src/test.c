@@ -1,8 +1,8 @@
 #include <stdio.h>
 
-int main()
+int	main()
 {
-	signed int i = 5;
+	int	i;
 
 	printf("Hello, World");
 	return (0);
