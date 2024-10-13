@@ -69,7 +69,7 @@ impl<'a> Token<'a> {
         } else if value == ";" {
             TokenType::Semicolon
         } else if value == "=" {
-        	TokenType::Assignment
+            TokenType::Assignment
         } else if C_TYPES.contains(&value) {
             TokenType::Type
         } else {
@@ -127,41 +127,45 @@ fn handle_type_signed_unsigned(tokens: &mut [Token], i: &mut usize) {
 }
 
 fn handle_type(tokens: &mut [Token], i: &mut usize) {
-	println!("In hanlde_type");
-	if tokens[*i + 1].kind == TokenType::Tab {
-		if tokens[*i + 2].kind == TokenType::Symbol {
-			if tokens[*i + 3].kind == TokenType::Semicolon {
-				if tokens[*i + 4].kind == TokenType::Newline {
-					println!("variable {} correctly declared", tokens[*i + 2].value);
-					*i += 4;
-					return ;
-				}
-			}
-		}
-	} else if tokens[*i + 1].kind == TokenType::Type {
-	    if tokens[*i].value == "unsigned" || tokens[*i].value == "signed" {
-	    handle_type_signed_unsigned(tokens, i);
-	    } else {
-	    	eprintln!("Expected tab after Variable Declaration");
-	    }
-	}
+    println!("In hanlde_type");
+    if tokens[*i + 1].kind == TokenType::Tab {
+    	println!("next was tab");
+        if tokens[*i + 2].kind == TokenType::Symbol {
+        	println!("then symbol");
+            if tokens[*i + 3].kind == TokenType::Semicolon {
+	           	println!("then semicolon");
+                if tokens[*i + 4].kind == TokenType::Newline {
+                    println!("variable {} correctly declared", tokens[*i + 2].value);
+                    *i += 4;
+                    return;
+                }
+            }
+        }
+    } else if tokens[*i + 1].kind == TokenType::Type {
+        if tokens[*i].value == "unsigned" || tokens[*i].value == "signed" {
+            handle_type_signed_unsigned(tokens, i);
+        } else {
+            eprintln!("Expected tab after Variable Declaration");
+        }
+    }
 }
 
 fn parse_tokens(tokens: &mut Vec<Token>) -> std::io::Result<()> {
-    let mut indent_level: u32;
-    let mut token_store: Token;
-    let mut i: usize = 0;
+	let mut i: usize = 0;
 
-    while i < tokens.len() {
-        match &mut tokens[i].kind {
-            TokenType::Type => handle_type(&mut tokens[i..], &mut i),
-            _ => {
-                println!("{:?}", tokens[i].kind);
-            }
-        }
-        i += 1;
-    }
-    Ok(())
+	while i < tokens.len() {
+		match &mut tokens[i].kind {
+			TokenType::Type => {
+				println!("{:?}", tokens[i].kind);
+				handle_type(&mut tokens[i..], &mut i)
+			}
+			_ => {
+			    println!("{:?}", tokens[i].kind);
+			}
+		}
+		i += 1;
+	}
+	Ok(())
 }
 
 static C_TYPES: &[&str] = &[
@@ -198,7 +202,11 @@ fn main() -> std::io::Result<()> {
     for string in strings_token {
         tokens.push(Token::new(&string));
     }
-
+    let mut i: usize = 0;
+    while i < tokens.len() {
+    	println!("{:?}", tokens[i].value.to_ascii_lowercase());
+   	i += 1;
+    }
     let _ = parse_tokens(&mut tokens);
     Ok(())
 }

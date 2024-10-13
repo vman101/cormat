@@ -1,9 +1,4 @@
-#include <stdio.h>
-
 int	main()
 {
-	int	i;
-
-	printf("Hello, World");
-	return (0);
+	int	a = 0;
 }
